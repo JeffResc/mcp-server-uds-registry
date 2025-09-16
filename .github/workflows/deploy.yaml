@@ -34,7 +34,6 @@ jobs:
       uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        workingDirectory: ./forms
         command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
 
     - name: Comment Preview Link
@@ -56,4 +55,3 @@ jobs:
       uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        workingDirectory: ./forms

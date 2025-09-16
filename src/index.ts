@@ -60,10 +60,10 @@ export class MyMCP extends McpAgent {
 			{
 				title: "Package",
 				description: "Description of a UDS package",
-				inputSchema: z.object({
+				inputSchema: {
 					organizationName: z.string(),
 					packageName: z.string()
-				}).shape
+				}
 			},
 			async (args) => {
 				try {
@@ -102,13 +102,13 @@ export class MyMCP extends McpAgent {
 			{
 				title: "SBOM",
 				description: "SBOM information on a specific UDS package given an organization name, package name, version tag and architecture. Version tag should be of the form x.y.z-uds.a without the flavor or architecture.",
-				inputSchema: z.object({
+				inputSchema: {
 					organizationName: z.string(),
 					packageName: z.string(),
 					versionTag: z.string(),
 					flavor: z.string(),
 					architecture: z.string()
-				}).shape
+				}
 			},
 			async (args) => {
 				try {
@@ -150,13 +150,13 @@ export class MyMCP extends McpAgent {
 			{
 				title: "CVES",
 				description: "CVE information on a specific UDS package given an organization name, package name, version tag and architecture. Version tag should be of the form x.y.z-uds.a without the flavor or architecture.",
-				inputSchema: z.object({
+				inputSchema: {
 					organizationName: z.string(),
 					packageName: z.string(),
 					versionTag: z.string(),
 					flavor: z.string(),
 					architecture: z.string()
-				}).shape
+				}
 			},
 			async (args) => {
 				try {

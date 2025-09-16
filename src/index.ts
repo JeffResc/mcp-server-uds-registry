@@ -65,16 +65,35 @@ export class MyMCP extends McpAgent {
 					packageName: z.string()
 				}).shape
 			},
-			async ({ organizationName, packageName }) => {
-				const packageData = await fetchJson(`/uds/metadata/${organizationName}/${packageName}`, this.env);
+			async (args) => {
+				try {
+					const schema = z.object({
+						organizationName: z.string().min(1, "Organization name is required"),
+						packageName: z.string().min(1, "Package name is required")
+					});
 
-				return {
-					content: [{
-						type: "text",
-						mimeType: "application/json",
-						text: JSON.stringify(packageData),
-					}]
-				};
+					const { organizationName, packageName } = schema.parse(args);
+					const packageData = await fetchJson(`/uds/metadata/${organizationName}/${packageName}`, this.env);
+
+					return {
+						content: [{
+							type: "text",
+							mimeType: "application/json",
+							text: JSON.stringify(packageData),
+						}]
+					};
+				} catch (error) {
+					if (error instanceof z.ZodError) {
+						return {
+							content: [{
+								type: "text",
+								text: `Invalid input: ${error.errors.map(e => e.message).join(', ')}`
+							}],
+							isError: true
+						};
+					}
+					throw error;
+				}
 			}
 		);
 
@@ -91,16 +110,38 @@ export class MyMCP extends McpAgent {
 					architecture: z.string()
 				}).shape
 			},
-			async ({ organizationName, packageName, versionTag, flavor, architecture }) => {
-				const packageData = await fetchJson(`/uds/artifacts/${organizationName}/${packageName}/${versionTag}-${flavor}-${architecture}/sbom`, this.env);
+			async (args) => {
+				try {
+					const schema = z.object({
+						organizationName: z.string().min(1, "Organization name is required"),
+						packageName: z.string().min(1, "Package name is required"),
+						versionTag: z.string().min(1, "Version tag is required"),
+						flavor: z.string().min(1, "Flavor is required"),
+						architecture: z.string().min(1, "Architecture is required")
+					});
 
-				return {
-					content: [{
-						type: "text",
-						mimeType: "application/json",
-						text: JSON.stringify(packageData),
-					}]
-				};
+					const { organizationName, packageName, versionTag, flavor, architecture } = schema.parse(args);
+					const packageData = await fetchJson(`/uds/artifacts/${organizationName}/${packageName}/${versionTag}-${flavor}-${architecture}/sbom`, this.env);
+
+					return {
+						content: [{
+							type: "text",
+							mimeType: "application/json",
+							text: JSON.stringify(packageData),
+						}]
+					};
+				} catch (error) {
+					if (error instanceof z.ZodError) {
+						return {
+							content: [{
+								type: "text",
+								text: `Invalid input: ${error.errors.map(e => e.message).join(', ')}`
+							}],
+							isError: true
+						};
+					}
+					throw error;
+				}
 			}
 		);
 
@@ -117,16 +158,38 @@ export class MyMCP extends McpAgent {
 					architecture: z.string()
 				}).shape
 			},
-			async ({ organizationName, packageName, versionTag, flavor, architecture }) => {
-				const packageData = await fetchJson(`/uds/artifacts/${organizationName}/${packageName}/${versionTag}-${flavor}-${architecture}/cves`, this.env);
+			async (args) => {
+				try {
+					const schema = z.object({
+						organizationName: z.string().min(1, "Organization name is required"),
+						packageName: z.string().min(1, "Package name is required"),
+						versionTag: z.string().min(1, "Version tag is required"),
+						flavor: z.string().min(1, "Flavor is required"),
+						architecture: z.string().min(1, "Architecture is required")
+					});
 
-				return {
-					content: [{
-						type: "text",
-						mimeType: "application/json",
-						text: JSON.stringify(packageData),
-					}]
-				};
+					const { organizationName, packageName, versionTag, flavor, architecture } = schema.parse(args);
+					const packageData = await fetchJson(`/uds/artifacts/${organizationName}/${packageName}/${versionTag}-${flavor}-${architecture}/cves`, this.env);
+
+					return {
+						content: [{
+							type: "text",
+							mimeType: "application/json",
+							text: JSON.stringify(packageData),
+						}]
+					};
+				} catch (error) {
+					if (error instanceof z.ZodError) {
+						return {
+							content: [{
+								type: "text",
+								text: `Invalid input: ${error.errors.map(e => e.message).join(', ')}`
+							}],
+							isError: true
+						};
+					}
+					throw error;
+				}
 			}
 		);
 	}

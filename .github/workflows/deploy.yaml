@@ -39,7 +39,7 @@ jobs:
     - name: Comment Preview Link
       if: github.event_name == 'pull_request'
       run: |
-        PREVIEW_URL="https://pr-${{ github.event.pull_request.number }}-twin-trees-3-forms.jeffresc.workers.dev"
+        PREVIEW_URL="https://pr-${{ github.event.pull_request.number }}-mcp-uds-registry.jeffresc.workers.dev"
 
         gh pr comment ${{ github.event.pull_request.number }} --body "🚀 **Forms Preview deployed!**
 

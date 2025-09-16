@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UDS Registry MCP Server</title>
+	<style>
+		body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+		h1 { color: #333; }
+		h2 { color: #666; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+		pre { background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; }
+		code { background: #f0f0f0; padding: 2px 4px; border-radius: 3px; }
+		.tool { margin: 10px 0; padding: 10px; background: #f9f9f9; border-left: 4px solid #007acc; }
+		.tool-name { font-weight: bold; color: #007acc; }
+	</style>
+</head>
+<body>
+	<h1>UDS Registry MCP Server</h1>
+
+	<h2>What This Server Does</h2>
+	<p>This Model Context Protocol (MCP) server provides AI tools with access to the <a href="https://registry.defenseunicorns.com" targt="_blank"></a><strong>UDS (Unicorn Delivery Service) Registry</strong></a>. It enables AI assistants to:</p>
+
+	<div class="tool">
+		<div class="tool-name">catalog</div>
+		Browse the public catalog of UDS organizations and packages
+	</div>
+
+	<div class="tool">
+		<div class="tool-name">package</div>
+		Get detailed information about specific UDS packages
+	</div>
+
+	<div class="tool">
+		<div class="tool-name">sbom</div>
+		Retrieve Software Bill of Materials (SBOM) for specific package versions
+	</div>
+
+	<div class="tool">
+		<div class="tool-name">cves</div>
+		Access CVE (Common Vulnerabilities and Exposures) information for package versions
+	</div>
+
+	<h2>Installation Instructions</h2>
+
+	<h3>Claude Desktop</h3>
+	<p>Add this server to your Claude Desktop configuration:</p>
+	<pre><code>{
+  "mcpServers": {
+    "uds-registry": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-fetch",
+        "{{BASE_URL}}/mcp"
+      ]
+    }
+  }
+}</code></pre>
+
+	<p>Alternatively, for direct SSE connection:</p>
+	<pre><code>{
+  "mcpServers": {
+    "uds-registry": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-sse",
+        "{{BASE_URL}}/sse"
+      ]
+    }
+  }
+}</code></pre>
+
+	<h3>Claude Code</h3>
+	<p>Configure Claude Code to use this MCP server:</p>
+	<pre><code>claude config mcp add uds-registry \
+  --command "npx" \
+  --args "@modelcontextprotocol/server-fetch" "{{BASE_URL}}/mcp"</code></pre>
+
+	<p>Or using SSE:</p>
+	<pre><code>claude config mcp add uds-registry \
+  --command "npx" \
+  --args "@modelcontextprotocol/server-sse" "{{BASE_URL}}/sse"</code></pre>
+
+	<h3>Other MCP-Compatible Tools</h3>
+	<p>For other AI tools that support MCP, use one of these endpoints:</p>
+	<ul>
+		<li><strong>Standard MCP:</strong> <code>{{BASE_URL}}/mcp</code></li>
+		<li><strong>Server-Sent Events:</strong> <code>{{BASE_URL}}/sse</code></li>
+	</ul>
+
+	<h2>Usage</h2>
+	<p>Once configured, you can ask your AI assistant to:</p>
+	<ul>
+		<li>"Show me the UDS catalog"</li>
+		<li>"Get information about the [package-name] package from [org-name]"</li>
+		<li>"Check the SBOM for [package] version [version]"</li>
+		<li>"What CVEs affect [package] version [version]?"</li>
+	</ul>
+</body>
+</html>

@@ -1,50 +1,77 @@
-# Building a Remote MCP Server on Cloudflare (Without Auth)
+# UDS Registry MCP Server
 
-This example allows you to deploy a remote MCP server that doesn't require authentication on Cloudflare Workers. 
+A Model Context Protocol (MCP) server that provides AI assistants with access to the [UDS (Unicorn Delivery Service) Registry](https://registry.defenseunicorns.com). This server runs on Cloudflare Workers and offers tools for browsing UDS packages, retrieving metadata, SBOM information, and CVE data.
 
-## Get started: 
+## Features
 
-[![Deploy to Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/ai/tree/main/demos/remote-mcp-authless)
+The server provides four main tools:
 
-This will deploy your MCP server to a URL like: `remote-mcp-server-authless.<your-account>.workers.dev/sse`
+- **catalog**: Browse the complete catalog of UDS organizations and packages
+- **package**: Get detailed information about specific UDS packages
+- **sbom**: Retrieve Software Bill of Materials (SBOM) for specific package versions
+- **cves**: Access CVE (Common Vulnerabilities and Exposures) information for package versions
 
-Alternatively, you can use the command line below to get the remote MCP Server created on your local machine:
+## Deployment
+
+This server is deployed at: `https://mcp-server-uds-registry.jeffrescignano.io`
+
+To deploy your own instance:
+
 ```bash
-npm create cloudflare@latest -- my-mcp-server --template=cloudflare/ai/demos/remote-mcp-authless
+npm install
+npm run deploy
 ```
 
-## Customizing your MCP Server
+## Usage
 
-To add your own [tools](https://developers.cloudflare.com/agents/model-context-protocol/tools/) to the MCP server, define each tool inside the `init()` method of `src/index.ts` using `this.server.tool(...)`. 
+Visit the root URL for detailed installation instructions for various AI tools: [https://mcp-server-uds-registry.jeffrescignano.io](https://mcp-server-uds-registry.jeffrescignano.io)
 
-## Connect to Cloudflare AI Playground
+### Claude Desktop
 
-You can connect to your MCP server from the Cloudflare AI Playground, which is a remote MCP client:
-
-1. Go to https://playground.ai.cloudflare.com/
-2. Enter your deployed MCP server URL (`remote-mcp-server-authless.<your-account>.workers.dev/sse`)
-3. You can now use your MCP tools directly from the playground!
-
-## Connect Claude Desktop to your MCP server
-
-You can also connect to your remote MCP server from local MCP clients, by using the [mcp-remote proxy](https://www.npmjs.com/package/mcp-remote). 
-
-To connect to your MCP server from Claude Desktop, follow [Anthropic's Quickstart](https://modelcontextprotocol.io/quickstart/user) and within Claude Desktop go to Settings > Developer > Edit Config.
-
-Update with this configuration:
+Add to your Claude Desktop configuration:
 
 ```json
 {
   "mcpServers": {
-    "calculator": {
+    "uds-registry": {
       "command": "npx",
       "args": [
-        "mcp-remote",
-        "http://localhost:8787/sse"  // or remote-mcp-server-authless.your-account.workers.dev/sse
+        "@modelcontextprotocol/server-fetch",
+        "https://mcp-server-uds-registry.jeffrescignano.io/mcp"
       ]
     }
   }
 }
 ```
 
-Restart Claude and you should see the tools become available. 
+### Claude Code
+
+```bash
+claude config mcp add uds-registry \
+  --command "npx" \
+  --args "@modelcontextprotocol/server-fetch" "https://mcp-server-uds-registry.jeffrescignano.io/mcp"
+```
+
+## Available Endpoints
+
+- `/` - Documentation and installation instructions
+- `/mcp` - Standard MCP protocol endpoint
+- `/sse` - Server-Sent Events endpoint for MCP
+
+## Example Queries
+
+Once configured, you can ask your AI assistant:
+
+- "Show me the UDS catalog"
+- "Get information about the gitlab package from defenseunicorns"
+- "Check the SBOM for pepr version 0.32.6-uds.0"
+- "What CVEs affect istio-controlplane version 1.22.3-uds.0?"
+
+## Development
+
+```bash
+pnpm install
+pnpm run dev
+```
+
+This will start a local development server at `http://localhost:8787`. 

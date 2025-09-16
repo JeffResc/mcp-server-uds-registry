@@ -1,0 +1,59 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        package_json_file: 'package.json'
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+
+    - name: Deploy Preview to Cloudflare Workers
+      id: deploy-preview
+      if: github.event_name == 'pull_request'
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        workingDirectory: ./forms
+        command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
+
+    - name: Comment Preview Link
+      if: github.event_name == 'pull_request'
+      run: |
+        PREVIEW_URL="https://pr-${{ github.event.pull_request.number }}-twin-trees-3-forms.jeffresc.workers.dev"
+
+        gh pr comment ${{ github.event.pull_request.number }} --body "🚀 **Forms Preview deployed!**
+
+        Preview URL: $PREVIEW_URL
+
+        This preview was automatically generated for commit ${{ github.sha }}."
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    
+    - name: Deploy to Cloudflare Workers
+      if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        workingDirectory: ./forms

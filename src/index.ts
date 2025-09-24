@@ -30,7 +30,9 @@ export class MyMCP extends McpAgent {
 				description: "Catalog of UDS organizations and packages",
 			},
 			async ({}) => {
-				const catalogData = await fetchJson("/uds/catalog", this.env);
+				console.log('[catalog] Request received with no input data');
+				try {
+					const catalogData = await fetchJson("/uds/catalog", this.env);
 
 				// Remove icon field from nested catalog data
 				const filteredData = { ...catalogData };
@@ -52,6 +54,10 @@ export class MyMCP extends McpAgent {
 						text: JSON.stringify(filteredData),
 					}]
 				};
+				} catch (error) {
+					console.error('[catalog] Error occurred:', error);
+					throw error;
+				}
 			}
 		);
 
@@ -66,6 +72,7 @@ export class MyMCP extends McpAgent {
 				}
 			},
 			async (args) => {
+				console.log('[package] Request received with input:', JSON.stringify(args));
 				try {
 					const schema = z.object({
 						organizationName: z.string().min(1, "Organization name is required"),
@@ -84,6 +91,7 @@ export class MyMCP extends McpAgent {
 					};
 				} catch (error) {
 					if (error instanceof z.ZodError) {
+						console.error('[package] Input validation error:', error.errors);
 						return {
 							content: [{
 								type: "text",
@@ -92,6 +100,7 @@ export class MyMCP extends McpAgent {
 							isError: true
 						};
 					}
+					console.error('[package] Error occurred:', error);
 					throw error;
 				}
 			}
@@ -111,6 +120,7 @@ export class MyMCP extends McpAgent {
 				}
 			},
 			async (args) => {
+				console.log('[sbom] Request received with input:', JSON.stringify(args));
 				try {
 					const schema = z.object({
 						organizationName: z.string().min(1, "Organization name is required"),
@@ -132,6 +142,7 @@ export class MyMCP extends McpAgent {
 					};
 				} catch (error) {
 					if (error instanceof z.ZodError) {
+						console.error('[sbom] Input validation error:', error.errors);
 						return {
 							content: [{
 								type: "text",
@@ -140,6 +151,7 @@ export class MyMCP extends McpAgent {
 							isError: true
 						};
 					}
+					console.error('[sbom] Error occurred:', error);
 					throw error;
 				}
 			}
@@ -159,6 +171,7 @@ export class MyMCP extends McpAgent {
 				}
 			},
 			async (args) => {
+				console.log('[cves] Request received with input:', JSON.stringify(args));
 				try {
 					const schema = z.object({
 						organizationName: z.string().min(1, "Organization name is required"),
@@ -180,6 +193,7 @@ export class MyMCP extends McpAgent {
 					};
 				} catch (error) {
 					if (error instanceof z.ZodError) {
+						console.error('[cves] Input validation error:', error.errors);
 						return {
 							content: [{
 								type: "text",
@@ -188,6 +202,7 @@ export class MyMCP extends McpAgent {
 							isError: true
 						};
 					}
+					console.error('[cves] Error occurred:', error);
 					throw error;
 				}
 			}

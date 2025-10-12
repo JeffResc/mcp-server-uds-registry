@@ -75,3 +75,6 @@ pnpm run dev
 ```
 
 This will start a local development server at `http://localhost:8787`. 
+
+## Employment Disclosure
+Although I am currently employed by [Defense Unicorns](https://defenseunicorns.com/), this project is not affiliated with the company or an officially supported product.

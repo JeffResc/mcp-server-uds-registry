@@ -13,7 +13,7 @@
 		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "1.24.1",
+		"@modelcontextprotocol/sdk": "1.25.1",
 		"agents": "^0.2.0",
 		"zod": "^4.0.0"
 	},
